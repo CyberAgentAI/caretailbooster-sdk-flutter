@@ -4,6 +4,8 @@ package com.example.caretailbooster_sdk
 
 import android.content.Context
 import android.view.View
+import android.os.Handler
+import android.os.Looper
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.runtime.Composable
@@ -47,12 +49,38 @@ class CaRetailBoosterView(
         val callback = object : CaRetailBoosterCallback {
             override fun onMarkSucceeded() {
                 println("[Android] onMarkSucceeded")
-                channel.invokeMethod("onMarkSucceeded", null)
+
+                try {
+                    Handler(Looper.getMainLooper()).post {
+                        try {
+                            channel.invokeMethod("onMarkSucceeded", null)
+                        } catch (e: Exception) {
+                            println("[Android] Error invoking onMarkSucceeded: ${e.message}")
+                            e.printStackTrace()
+                        }
+                    }
+                } catch (e: Exception) {
+                    println("[Android] Error invoking onMarkSucceeded: ${e.message}")
+                    e.printStackTrace()
+                }
             }
 
             override fun onRewardModalClose() {
                 println("[Android] onRewardModalClose")
-                channel.invokeMethod("onRewardModalClosed", null)
+
+                try {
+                    Handler(Looper.getMainLooper()).post {
+                        try {
+                            channel.invokeMethod("onRewardModalClosed", null)
+                        } catch (e: Exception) {
+                            println("[Android] Error invoking onRewardModalClosed: ${e.message}")
+                            e.printStackTrace()
+                        }
+                    }
+                } catch (e: Exception) {
+                    println("[Android] Error invoking onRewardModalClosed: ${e.message}")
+                    e.printStackTrace()
+                }
             }
         }
 

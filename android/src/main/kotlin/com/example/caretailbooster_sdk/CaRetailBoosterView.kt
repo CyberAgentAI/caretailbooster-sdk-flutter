@@ -1,0 +1,113 @@
+// TODO: - プラットフォームビューを実装
+
+package com.example.caretailbooster_sdk
+
+import android.content.Context
+import android.view.View
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.ComposeView
+import io.flutter.plugin.common.BinaryMessenger
+import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugin.platform.PlatformView
+import com.retaiboo.caretailboostersdk.useCaRetailBooster
+import com.retaiboo.caretailboostersdk.CaRetailBoosterCallback
+import com.retaiboo.caretailboostersdk.CaRetailBoosterEnvMode
+import com.retaiboo.caretailboostersdk.CaRetailBoosterOptions
+import com.retaiboo.caretailboostersdk.CaRetailBoosterRewardAdOptions
+
+class CaRetailBoosterView(
+    private val context: Context,
+    messenger: BinaryMessenger,
+    viewId: Int,
+    private val mediaId: String,
+    private val userId: String,
+    private val crypto: String,
+    private val tagGroupId: String,
+    private val runMode: String,
+    private val width: Int?,
+    private val height: Int?
+) : PlatformView {
+    private val channel: MethodChannel = MethodChannel(messenger, "ca_retail_booster_ad_view_$viewId")
+    private var adView: View? = null
+
+    init {
+        // ComposeViewの作成（シンプルな実装）
+        adView = ComposeView(context).apply {
+            setContent {
+                CaRetailBoosterContent()
+            }
+        }
+    }
+
+    @Composable
+    private fun CaRetailBoosterContent() {
+        // コールバックの実装
+        val callback = object : CaRetailBoosterCallback {
+            override fun onMarkSucceeded() {
+                println("[Android] onMarkSucceeded")
+                channel.invokeMethod("onMarkSucceeded", null)
+            }
+
+            override fun onRewardModalClose() {
+                println("[Android] onRewardModalClose")
+                channel.invokeMethod("onRewardModalClosed", null)
+            }
+        }
+
+        // オプションの設定
+        val rewardAdOptions = if (width != null || height != null) {
+            object : CaRetailBoosterRewardAdOptions {
+                override val width = this@CaRetailBoosterView.width
+                override val height = this@CaRetailBoosterView.height
+            }
+        } else null
+
+        val options = if (rewardAdOptions != null) {
+            object : CaRetailBoosterOptions {
+                override val rewardAd = rewardAdOptions
+            }
+        } else null
+
+        // 実行モードの変換
+        val mode = when (runMode.lowercase()) {
+            "local" -> CaRetailBoosterEnvMode.LOCAL
+            "dev" -> CaRetailBoosterEnvMode.DEV
+            "prd" -> CaRetailBoosterEnvMode.PRD
+            "mock" -> CaRetailBoosterEnvMode.MOCK
+            else -> CaRetailBoosterEnvMode.STG
+        }
+
+        // SDKの初期化
+        val caRetailBoosterResult = useCaRetailBooster(
+            context = context,
+            mediaId = mediaId,
+            userId = userId,
+            crypto = crypto,
+            tagGroupId = tagGroupId,
+            mode = mode,
+            callback = callback,
+            options = options
+        )
+
+        // 広告の表示
+        Column {
+            LazyRow {
+                caRetailBoosterResult.ads.forEach { ad ->
+                    item {
+                        ad()
+                    }
+                }
+            }
+        }
+    }
+
+    override fun getView(): View {
+        return adView ?: View(context)
+    }
+
+    override fun dispose() {
+        adView = null
+    }
+}

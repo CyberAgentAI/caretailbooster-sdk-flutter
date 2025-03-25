@@ -1,0 +1,121 @@
+group = "com.example.caretailbooster_sdk"
+version = "1.0-SNAPSHOT"
+
+buildscript {
+    ext.kotlin_version = "1.9.10"
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("com.android.tools.build:gradle:7.4.2")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+    }
+}
+
+repositories {
+    google()
+    mavenCentral()
+    maven {
+        url = uri("https://maven-caretailboostersdk.retaiboo.com/repository")
+    }
+}
+
+apply plugin: "com.android.library"
+apply plugin: "kotlin-android"
+
+android {
+    namespace = "com.example.caretailbooster_sdk"
+
+    compileSdk = 34
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.3"
+    }
+
+    sourceSets {
+        main.java.srcDirs += "src/main/kotlin"
+        test.java.srcDirs += "src/test/kotlin"
+    }
+
+    defaultConfig {
+        minSdk = 24
+        consumerProguardFiles "proguard-rules.pro"
+    }
+
+    dependencies {
+        def composeBom = platform("androidx.compose:compose-bom:2024.08.00")
+        implementation(composeBom)
+        androidTestImplementation(composeBom)
+        implementation("androidx.activity:activity-compose:1.9.2")
+        
+        implementation("androidx.compose.ui:ui")
+        implementation("androidx.compose.ui:ui-graphics")
+        implementation("androidx.compose.ui:ui-tooling-preview")
+        implementation("androidx.compose.material3:material3")
+        implementation("androidx.media3:media3-ui:1.5.1")
+        implementation("androidx.media3:media3-exoplayer:1.5.1")
+        
+        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+        
+        implementation("com.retaiboo:caretailbooster-sdk:0.1.9")
+
+        testImplementation("org.jetbrains.kotlin:kotlin-test")
+        testImplementation("org.mockito:mockito-core:5.0.0")
+
+        implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+        implementation("androidx.lifecycle:lifecycle-viewmodel:2.6.2")
+        implementation("androidx.savedstate:savedstate:1.2.1")
+        implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+
+        implementation 'androidx.compose.ui:ui:1.7.6'
+        implementation 'androidx.compose.material:material:1.5.0'
+        implementation 'androidx.compose.ui:ui-tooling-preview:1.5.0'
+
+        implementation("androidx.compose.runtime:runtime-android:1.7.6")
+    }
+
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+
+            testLogging {
+               events "passed", "skipped", "failed", "standardOut", "standardError"
+               outputs.upToDateWhen {false}
+               showStandardStreams = true
+            }
+        }
+    }
+
+    lint {
+        disable 'InvalidPackage'
+        checkReleaseBuilds = false
+        abortOnError = false
+    }
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions {
+        freeCompilerArgs += [
+            "-Xskip-metadata-version-check"
+        ]
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.release = 17
+}

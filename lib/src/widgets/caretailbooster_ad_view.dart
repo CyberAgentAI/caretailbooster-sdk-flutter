@@ -1,0 +1,106 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'dart:io';
+
+import '../models/run_mode.dart';
+import '../models/ad_options.dart';
+import '../models/callback_type.dart';
+
+class CaRetailBoosterAdView extends StatefulWidget {
+  final String mediaId;
+  final String userId;
+  final String crypto;
+  final String tagGroupId;
+  final CaRetailBoosterRunMode runMode;
+  final CaRetailBoosterAdOptions? options;
+  final VoidCallback? onMarkSucceeded;
+  final VoidCallback? onRewardModalClosed;
+
+  const CaRetailBoosterAdView({
+    super.key,
+    required this.mediaId,
+    required this.userId,
+    required this.crypto,
+    required this.tagGroupId,
+    required this.runMode,
+    this.options,
+    this.onMarkSucceeded,
+    this.onRewardModalClosed,
+  });
+
+  @override
+  State<CaRetailBoosterAdView> createState() => _CaRetailBoosterAdViewState();
+}
+
+class _CaRetailBoosterAdViewState extends State<CaRetailBoosterAdView> {
+  late final MethodChannel _channel;
+
+  @override
+  void initState() {
+    super.initState();
+    _setupMethodChannel();
+  }
+
+  void _setupMethodChannel() {
+    _channel = MethodChannel('ca_retail_booster_ad_view_${widget.hashCode}');
+    _channel.setMethodCallHandler(_handleMethodCall);
+  }
+
+  Future<dynamic> _handleMethodCall(MethodCall call) async {
+    final callbackType = CaRetailBoosterCallbackType.fromMethodName(call.method);
+
+    switch (callbackType) {
+      case CaRetailBoosterCallbackType.markSucceeded:
+        widget.onMarkSucceeded?.call();
+        break;
+      case CaRetailBoosterCallbackType.rewardModalClosed:
+        widget.onRewardModalClosed?.call();
+        break;
+      case null:
+        break;
+    }
+    return null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (Platform.isIOS) {
+      return UiKitView(
+        viewType: 'ca_retail_booster_ad_view',
+        creationParams: <String, dynamic>{
+          'mediaId': widget.mediaId,
+          'userId': widget.userId,
+          'crypto': widget.crypto,
+          'tagGroupId': widget.tagGroupId,
+          'runMode': widget.runMode.name,
+          'width': widget.options?.width,
+          'height': widget.options?.height,
+        },
+        creationParamsCodec: const StandardMessageCodec(),
+      );
+    } else if (Platform.isAndroid) {
+      return AndroidView(
+        viewType: 'ca_retail_booster_ad_view',
+        creationParams: <String, dynamic>{
+          'mediaId': widget.mediaId,
+          'userId': widget.userId,
+          'crypto': widget.crypto,
+          'tagGroupId': widget.tagGroupId,
+          'runMode': widget.runMode.name,
+          'width': widget.options?.width,
+          'height': widget.options?.height,
+        },
+        creationParamsCodec: const StandardMessageCodec(),
+      );
+    } else {
+      return const Text('未対応のプラットフォームです');
+    }
+  }
+
+  @override
+  void dispose() {
+    // チャンネルのクリーンアップ
+    _channel.setMethodCallHandler(null);
+    super.dispose();
+  }
+}

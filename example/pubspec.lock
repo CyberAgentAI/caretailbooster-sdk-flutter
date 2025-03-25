@@ -20,10 +20,12 @@ packages:
   caretailbooster_sdk:
     dependency: "direct main"
     description:
-      path: ".."
-      relative: true
-    source: path
-    version: "0.0.1"
+      path: "."
+      ref: "0.1.0"
+      resolved-ref: "28cfe71b710ae9f152dea1a16543d10bb54a5624"
+      url: "https://github.com/CyberAgentAI/caretailbooster-sdk-flutter"
+    source: git
+    version: "0.1.0"
   characters:
     dependency: transitive
     description:

@@ -38,16 +38,16 @@ class _CaRetailBoosterAdViewState extends State<CaRetailBoosterAdView> {
   @override
   void initState() {
     super.initState();
-    _setupMethodChannel();
   }
 
-  void _setupMethodChannel() {
-    _channel = MethodChannel('ca_retail_booster_ad_view_${widget.hashCode}');
+  void _onPlatformViewCreated(int viewId) {
+    _channel = MethodChannel('ca_retail_booster_ad_view_$viewId');
     _channel.setMethodCallHandler(_handleMethodCall);
   }
 
   Future<dynamic> _handleMethodCall(MethodCall call) async {
-    final callbackType = CaRetailBoosterCallbackType.fromMethodName(call.method);
+    final callbackType =
+        CaRetailBoosterCallbackType.fromMethodName(call.method);
 
     switch (callbackType) {
       case CaRetailBoosterCallbackType.markSucceeded:
@@ -67,6 +67,7 @@ class _CaRetailBoosterAdViewState extends State<CaRetailBoosterAdView> {
     if (Platform.isIOS) {
       return UiKitView(
         viewType: 'ca_retail_booster_ad_view',
+        onPlatformViewCreated: _onPlatformViewCreated,
         creationParams: <String, dynamic>{
           'mediaId': widget.mediaId,
           'userId': widget.userId,
@@ -81,6 +82,7 @@ class _CaRetailBoosterAdViewState extends State<CaRetailBoosterAdView> {
     } else if (Platform.isAndroid) {
       return AndroidView(
         viewType: 'ca_retail_booster_ad_view',
+        onPlatformViewCreated: _onPlatformViewCreated,
         creationParams: <String, dynamic>{
           'mediaId': widget.mediaId,
           'userId': widget.userId,

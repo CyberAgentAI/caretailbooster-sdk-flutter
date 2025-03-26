@@ -1,5 +1,3 @@
-// TODO: - プラットフォームビューを実装
-
 package com.example.caretailbooster_sdk
 
 import android.content.Context
@@ -35,7 +33,6 @@ class CaRetailBoosterView(
     private var adView: View? = null
 
     init {
-        // ComposeViewの作成（シンプルな実装）
         adView = ComposeView(context).apply {
             setContent {
                 CaRetailBoosterContent()

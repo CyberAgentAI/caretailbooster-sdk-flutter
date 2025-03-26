@@ -99,6 +99,7 @@ class CaRetailBoosterView(
         val mode = when (runMode.lowercase()) {
             "local" -> CaRetailBoosterEnvMode.LOCAL
             "dev" -> CaRetailBoosterEnvMode.DEV
+            "stg" -> CaRetailBoosterEnvMode.STG
             "prd" -> CaRetailBoosterEnvMode.PRD
             "mock" -> CaRetailBoosterEnvMode.MOCK
             else -> CaRetailBoosterEnvMode.STG

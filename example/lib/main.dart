@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width,
-                height: 173,
+                height: 210,
                 child: CaRetailBoosterAdView(
                   mediaId: mediaId,
                   userId: userId,

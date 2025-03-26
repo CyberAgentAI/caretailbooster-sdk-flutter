@@ -45,37 +45,21 @@ class CaRetailBoosterView(
         // コールバックの実装
         val callback = object : CaRetailBoosterCallback {
             override fun onMarkSucceeded() {
-                println("[Android] onMarkSucceeded")
-
                 try {
                     Handler(Looper.getMainLooper()).post {
-                        try {
-                            channel.invokeMethod("onMarkSucceeded", null)
-                        } catch (e: Exception) {
-                            println("[Android] Error invoking onMarkSucceeded: ${e.message}")
-                            e.printStackTrace()
-                        }
+                        channel.invokeMethod(CaRetailBoosterCallbackType.MARK_SUCCEEDED.methodName, null)
                     }
                 } catch (e: Exception) {
-                    println("[Android] Error invoking onMarkSucceeded: ${e.message}")
                     e.printStackTrace()
                 }
             }
 
             override fun onRewardModalClose() {
-                println("[Android] onRewardModalClose")
-
                 try {
                     Handler(Looper.getMainLooper()).post {
-                        try {
-                            channel.invokeMethod("onRewardModalClosed", null)
-                        } catch (e: Exception) {
-                            println("[Android] Error invoking onRewardModalClosed: ${e.message}")
-                            e.printStackTrace()
-                        }
+                        channel.invokeMethod(CaRetailBoosterCallbackType.REWARD_MODAL_CLOSED.methodName, null)
                     }
                 } catch (e: Exception) {
-                    println("[Android] Error invoking onRewardModalClosed: ${e.message}")
                     e.printStackTrace()
                 }
             }

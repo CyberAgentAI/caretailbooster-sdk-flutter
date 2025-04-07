@@ -1,0 +1,15 @@
+{
+  "originHash" : "332ffb575fbcf7b37c51cedc95c164ccc2a86e312d458c0c1a99de659fb70d9a",
+  "pins" : [
+    {
+      "identity" : "caretailbooster-sdk-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/CyberAgentAI/caretailbooster-sdk-ios.git",
+      "state" : {
+        "revision" : "baa7c9106d2241be1138e22da0cf589a47f5b85a",
+        "version" : "0.1.3"
+      }
+    }
+  ],
+  "version" : 3
+}

@@ -10,12 +10,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const String mediaId = 'media_id';
-    const String userId = 'user_id';
-    const String crypto = 'crypto_id';
-    const String tagGroupId1 = 'reward1';
-    const String tagGroupId2 = 'banner1';
-    const CaRetailBoosterRunMode runMode = CaRetailBoosterRunMode.mock;
+    const String mediaId = 'wXkhs9RBxYY2L812';
+    const String userId = '1234567890123456';
+    const String crypto =
+        '34522f9dcb041c681f55d69e7f2929db79cc2aeab721fb7aeb66053e31c5d8a2';
+    const String tagGroupId1 = 'e6b7e7f1-d890-11ef-b526-06dcbba31fd5';
+    const String tagGroupId2 = 'a188368b-d89e-11ef-b526-06dcbba31fd5';
+    const CaRetailBoosterRunMode runMode = CaRetailBoosterRunMode.dev;
 
     return MaterialApp(
       home: Scaffold(

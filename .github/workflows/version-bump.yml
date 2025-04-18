@@ -1,0 +1,106 @@
+name: Version Bump
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: "Type of version update"
+        required: true
+        default: "patch"
+        type: choice
+        options:
+          - patch # 0.1.0 -> 0.1.1
+          - minor # 0.1.0 -> 0.2.0
+          - major # 0.1.0 -> 1.0.0
+
+jobs:
+  create-version-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.x"
+          channel: "stable"
+
+      - name: Create version update branch
+        id: create_branch
+        run: |
+          # Generate branch name with timestamp
+          BRANCH_NAME="version/bump-version-$(date +%Y%m%d-%H%M%S)"
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+          git checkout -b $BRANCH_NAME
+
+      - name: Update Version
+        id: version_bump
+        run: |
+          if ! grep -q '^version: [0-9]\+\.[0-9]\+\.[0-9]\+$' pubspec.yaml; then
+            echo "Error: Invalid version format in pubspec.yaml"
+            exit 1
+          fi
+          # Get current version
+          CURRENT_VERSION=$(grep 'version:' pubspec.yaml | sed 's/version: //g' | tr -d '"' | tr -d "'")
+          echo "Current version: $CURRENT_VERSION"
+
+          # Parse version components
+          IFS='.' read -r -a VERSION_PARTS <<< "$CURRENT_VERSION"
+          MAJOR="${VERSION_PARTS[0]}"
+          MINOR="${VERSION_PARTS[1]}"
+          PATCH="${VERSION_PARTS[2]}"
+
+          # Update based on version type
+          if [[ "${{ github.event.inputs.version_type }}" == "major" ]]; then
+            MAJOR=$((MAJOR + 1))
+            MINOR=0
+            PATCH=0
+          elif [[ "${{ github.event.inputs.version_type }}" == "minor" ]]; then
+            MINOR=$((MINOR + 1))
+            PATCH=0
+          else
+            PATCH=$((PATCH + 1))
+          fi
+
+          NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+          echo "New version: $NEW_VERSION"
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+          # Update version in pubspec.yaml
+          sed -i "s/version: $CURRENT_VERSION/version: $NEW_VERSION/g" pubspec.yaml
+
+          # Update version reference in example/pubspec.yaml
+          sed -i "s/ref: $CURRENT_VERSION/ref: $NEW_VERSION/g" example/pubspec.yaml
+
+      - name: Create Pull Request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add pubspec.yaml example/pubspec.yaml
+          git commit -m "Bump version to ${{ steps.version_bump.outputs.new_version }}"
+          git push origin ${{ steps.create_branch.outputs.branch_name }}
+
+      - name: Create PR
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "Bump version to ${{ steps.version_bump.outputs.new_version }}"
+          body: |
+            Version update PR
+
+            - Updated version in pubspec.yaml to ${{ steps.version_bump.outputs.new_version }}
+            - Updated version reference in example/pubspec.yaml
+
+            Please review and merge this PR to update the version.
+            After merging, you can create a release tag manually.
+          branch: ${{ steps.create_branch.outputs.branch_name }}
+          base: main
+          labels: |
+            version-bump
+            automated-pr

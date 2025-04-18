@@ -21,11 +21,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "0.1.0"
-      resolved-ref: "28cfe71b710ae9f152dea1a16543d10bb54a5624"
+      ref: "0.1.2"
+      resolved-ref: a5cf24bd68efa38705e82035f29f71c0a1ae1836
       url: "https://github.com/CyberAgentAI/caretailbooster-sdk-flutter"
     source: git
-    version: "0.1.0"
+    version: "0.1.2"
   characters:
     dependency: transitive
     description:
@@ -50,6 +50,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.1"
+  crypto:
+    dependency: "direct main"
+    description:
+      name: crypto
+      sha256: "1e445881f28f22d6140f181e07737b22f1e099a5e1ff94b0af2f9e4a463f4855"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.6"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -256,6 +264,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.4"
+  typed_data:
+    dependency: transitive
+    description:
+      name: typed_data
+      sha256: f9049c039ebfeb4cf7a7104a675823cd72dba8297f264b6637062516699fa006
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.0"
   vector_math:
     dependency: transitive
     description:

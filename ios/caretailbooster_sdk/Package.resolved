@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/CyberAgentAI/caretailbooster-sdk-ios.git",
       "state" : {
-        "revision" : "f4ce30160ee2558e22537e4d5408930f6a39619a",
-        "version" : "1.0.1"
+        "revision" : "6f562d9fd4b9a604f8f1681470df0a24b81b25b2",
+        "version" : "1.1.0"
       }
     }
   ],

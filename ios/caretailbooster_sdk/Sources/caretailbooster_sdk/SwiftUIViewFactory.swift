@@ -36,7 +36,8 @@ class SwiftUIViewFactory: NSObject, FlutterPlatformViewFactory {
             tagGroupId: tagGroupId,
             runMode: runMode,
             width: args["width"] as? Int,
-            height: args["height"] as? Int
+            height: args["height"] as? Int,
+            itemSpacing: args["itemSpacing"] as? CGFloat
         )
     }
 

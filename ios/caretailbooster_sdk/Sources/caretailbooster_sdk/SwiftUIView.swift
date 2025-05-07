@@ -8,7 +8,7 @@ class SwiftUIView: NSObject, FlutterPlatformView {
     private let channel: FlutterMethodChannel
 
     @MainActor
-    init(frame: CGRect, messenger: FlutterBinaryMessenger, viewId: Int64, mediaId: String, userId: String, crypto: String, tagGroupId: String, runMode: String, width: Int?, height: Int?) {
+    init(frame: CGRect, messenger: FlutterBinaryMessenger, viewId: Int64, mediaId: String, userId: String, crypto: String, tagGroupId: String, runMode: String, width: Int?, height: Int?, itemSpacing: CGFloat?) {
         channel = FlutterMethodChannel(name: "ca_retail_booster_ad_view_\(viewId)", binaryMessenger: messenger)
         weak var weakChannel = channel
         let swiftUIView = RetailBoosterAdView(
@@ -25,7 +25,7 @@ class SwiftUIView: NSObject, FlutterPlatformView {
                     weakChannel?.invokeMethod(CaRetailBoosterCallback.rewardModalClosed.rawValue, arguments: nil)
                 }
             ),
-            options: .init(rewardAd: .init(width: width, height: height))
+            options: .init(rewardAd: .init(width: width, height: height), rewardAdItemSpacing: itemSpacing)
         )
         let hostingController = UIHostingController(rootView: swiftUIView)
         hostingController.view.frame = frame

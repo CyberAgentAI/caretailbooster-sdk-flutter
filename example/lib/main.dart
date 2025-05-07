@@ -42,6 +42,7 @@ class MyApp extends StatelessWidget {
                   options: CaRetailBoosterAdOptions(
                     width: 173,
                     height: 210,
+                    itemSpacing: 16,
                   ),
                 ),
               ),

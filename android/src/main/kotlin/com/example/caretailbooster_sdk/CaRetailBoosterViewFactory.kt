@@ -25,7 +25,8 @@ class CaRetailBoosterViewFactory(
             arguments["tagGroupId"] as? String ?: "",
             arguments["runMode"] as? String ?: "stg",
             arguments["width"] as? Int,
-            arguments["height"] as? Int
+            arguments["height"] as? Int,
+            arguments["itemSpacing"] as? Double
         )
     }
 }

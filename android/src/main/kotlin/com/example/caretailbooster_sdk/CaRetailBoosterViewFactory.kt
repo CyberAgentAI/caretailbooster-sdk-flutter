@@ -1,5 +1,3 @@
-// TODO: - プラットフォームビューファクトリを実装
-
 package com.example.caretailbooster_sdk
 
 import android.content.Context

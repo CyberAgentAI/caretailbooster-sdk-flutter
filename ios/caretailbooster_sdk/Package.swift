@@ -9,10 +9,10 @@ let package = Package(
         .iOS("13.0")
     ],
     products: [
-        .library(name: "caretailbooster-sdk", targets: ["caretailbooster_sdk"])
+        .library(name: "CaRetailBoosterSDK", targets: ["caretailbooster_sdk"])
     ],
     dependencies: [
-        .package(url: "https://github.com/CyberAgentAI/caretailbooster-sdk-ios.git", from: "0.1.3")
+        .package(url: "https://github.com/CyberAgentAI/caretailbooster-sdk-ios.git", from: "1.0.1")
     ],
     targets: [
         .target(

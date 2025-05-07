@@ -1,7 +1,6 @@
 import Flutter
 import UIKit
 import SwiftUI
-import CaRetailBoosterSDK
 
 public class CaRetailBoosterSdkPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {

@@ -76,6 +76,7 @@ class _CaRetailBoosterAdViewState extends State<CaRetailBoosterAdView> {
           'runMode': widget.runMode.name,
           'width': widget.options?.width,
           'height': widget.options?.height,
+          'itemSpacing': widget.options?.itemSpacing,
         },
         creationParamsCodec: const StandardMessageCodec(),
       );
@@ -91,6 +92,7 @@ class _CaRetailBoosterAdViewState extends State<CaRetailBoosterAdView> {
           'runMode': widget.runMode.name,
           'width': widget.options?.width,
           'height': widget.options?.height,
+          'itemSpacing': widget.options?.itemSpacing,
         },
         creationParamsCodec: const StandardMessageCodec(),
       );

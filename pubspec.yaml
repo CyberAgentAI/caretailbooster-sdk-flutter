@@ -1,6 +1,6 @@
 name: caretailbooster_sdk
 description: "A new Flutter plugin project."
-version: 0.1.5
+version: 0.2.0
 homepage: https://github.com/CyberAgentAI/caretailbooster-sdk-flutter
 
 environment:

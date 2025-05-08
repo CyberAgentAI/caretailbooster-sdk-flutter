@@ -1,5 +1,3 @@
-// TODO: - プラットフォームビューファクトリを実装
-
 package com.example.caretailbooster_sdk
 
 import android.content.Context
@@ -25,7 +23,8 @@ class CaRetailBoosterViewFactory(
             arguments["tagGroupId"] as? String ?: "",
             arguments["runMode"] as? String ?: "stg",
             arguments["width"] as? Int,
-            arguments["height"] as? Int
+            arguments["height"] as? Int,
+            arguments["itemSpacing"] as? Double
         )
     }
 }

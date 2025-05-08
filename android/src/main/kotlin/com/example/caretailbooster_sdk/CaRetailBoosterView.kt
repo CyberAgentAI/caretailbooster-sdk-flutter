@@ -5,9 +5,12 @@ import android.view.View
 import android.os.Handler
 import android.os.Looper
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.unit.dp
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.platform.PlatformView
@@ -27,7 +30,8 @@ class CaRetailBoosterView(
     private val tagGroupId: String,
     private val runMode: String,
     private val width: Int?,
-    private val height: Int?
+    private val height: Int?,
+    private val itemSpacing: Double?
 ) : PlatformView {
     private val channel: MethodChannel = MethodChannel(messenger, "ca_retail_booster_ad_view_$viewId")
     private var adView: View? = null
@@ -103,7 +107,9 @@ class CaRetailBoosterView(
 
         // 広告の表示
         Column {
-            LazyRow {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(itemSpacing?.toFloat()?.dp ?: 0.dp)
+            ) {
                 caRetailBoosterResult.ads.forEach { ad ->
                     item {
                         ad()

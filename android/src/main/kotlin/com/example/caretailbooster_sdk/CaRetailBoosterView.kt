@@ -19,6 +19,7 @@ import com.retaiboo.caretailboostersdk.CaRetailBoosterCallback
 import com.retaiboo.caretailboostersdk.CaRetailBoosterEnvMode
 import com.retaiboo.caretailboostersdk.CaRetailBoosterOptions
 import com.retaiboo.caretailboostersdk.CaRetailBoosterRewardAdOptions
+import androidx.compose.foundation.layout.PaddingValues
 
 class CaRetailBoosterView(
     private val context: Context,
@@ -31,7 +32,9 @@ class CaRetailBoosterView(
     private val runMode: String,
     private val width: Int?,
     private val height: Int?,
-    private val itemSpacing: Double?
+    private val itemSpacing: Double?,
+    private val leadingMargin: Double?,
+    private val trailingMargin: Double?
 ) : PlatformView {
     private val channel: MethodChannel = MethodChannel(messenger, "ca_retail_booster_ad_view_$viewId")
     private var adView: View? = null
@@ -108,7 +111,11 @@ class CaRetailBoosterView(
         // 広告の表示
         Column {
             LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(itemSpacing?.toFloat()?.dp ?: 0.dp)
+                horizontalArrangement = Arrangement.spacedBy(itemSpacing?.toFloat()?.dp ?: 0.dp),
+                contentPadding = PaddingValues(
+                    start = leadingMargin?.toFloat()?.dp ?: 0.dp,
+                    end = trailingMargin?.toFloat()?.dp ?: 0.dp
+                )
             ) {
                 caRetailBoosterResult.ads.forEach { ad ->
                     item {

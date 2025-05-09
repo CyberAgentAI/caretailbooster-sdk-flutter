@@ -77,6 +77,8 @@ class _CaRetailBoosterAdViewState extends State<CaRetailBoosterAdView> {
           'width': widget.options?.width,
           'height': widget.options?.height,
           'itemSpacing': widget.options?.itemSpacing,
+          'leadingMargin': widget.options?.leadingMargin,
+          'trailingMargin': widget.options?.trailingMargin,
         },
         creationParamsCodec: const StandardMessageCodec(),
       );
@@ -93,6 +95,8 @@ class _CaRetailBoosterAdViewState extends State<CaRetailBoosterAdView> {
           'width': widget.options?.width,
           'height': widget.options?.height,
           'itemSpacing': widget.options?.itemSpacing,
+          'leadingMargin': widget.options?.leadingMargin,
+          'trailingMargin': widget.options?.trailingMargin,
         },
         creationParamsCodec: const StandardMessageCodec(),
       );

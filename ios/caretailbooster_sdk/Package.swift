@@ -12,7 +12,7 @@ let package = Package(
         .library(name: "caretailbooster-sdk", targets: ["caretailbooster_sdk"])
     ],
     dependencies: [
-        .package(url: "https://github.com/CyberAgentAI/caretailbooster-sdk-ios.git", from: "1.1.0")
+        .package(url: "https://github.com/CyberAgentAI/caretailbooster-sdk-ios.git", from: "1.2.0")
     ],
     targets: [
         .target(

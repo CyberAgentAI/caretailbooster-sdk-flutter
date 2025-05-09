@@ -24,7 +24,9 @@ class CaRetailBoosterViewFactory(
             arguments["runMode"] as? String ?: "stg",
             arguments["width"] as? Int,
             arguments["height"] as? Int,
-            arguments["itemSpacing"] as? Double
+            arguments["itemSpacing"] as? Double,
+            arguments["leadingMargin"] as? Double,
+            arguments["trailingMargin"] as? Double
         )
     }
 }

@@ -48,6 +48,7 @@ class SwiftUIView: NSObject, FlutterPlatformView {
         )
         let hostingController = UIHostingController(rootView: swiftUIView)
         hostingController.view.frame = frame
+        hostingController.view.backgroundColor = .clear
 
         _view = hostingController.view
         super.init()

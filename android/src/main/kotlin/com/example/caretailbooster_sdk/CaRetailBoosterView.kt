@@ -20,6 +20,9 @@ import com.retaiboo.caretailboostersdk.CaRetailBoosterEnvMode
 import com.retaiboo.caretailboostersdk.CaRetailBoosterOptions
 import com.retaiboo.caretailboostersdk.CaRetailBoosterRewardAdOptions
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.background
 
 class CaRetailBoosterView(
     private val context: Context,
@@ -44,6 +47,7 @@ class CaRetailBoosterView(
             setContent {
                 CaRetailBoosterContent()
             }
+            setBackgroundColor(android.graphics.Color.TRANSPARENT)
         }
     }
 
@@ -115,7 +119,8 @@ class CaRetailBoosterView(
                 contentPadding = PaddingValues(
                     start = leadingMargin?.toFloat()?.dp ?: 0.dp,
                     end = trailingMargin?.toFloat()?.dp ?: 0.dp
-                )
+                ),
+                modifier = Modifier.background(Color.Transparent)
             ) {
                 caRetailBoosterResult.ads.forEach { ad ->
                     item {

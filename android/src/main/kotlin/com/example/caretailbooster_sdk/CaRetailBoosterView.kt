@@ -112,6 +112,12 @@ class CaRetailBoosterView(
             options = options
         )
 
+        // 広告の有無を通知
+        val hasAds = caRetailBoosterResult.ads.isNotEmpty()
+        Handler(Looper.getMainLooper()).post {
+            channel.invokeMethod(CaRetailBoosterMethodCallType.HAS_ADS.methodName, hasAds)
+        }
+
         // 広告の表示
         Column {
             LazyRow(

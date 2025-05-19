@@ -39,6 +39,9 @@ class MyApp extends StatelessWidget {
                   onRewardModalClosed: () {
                     debugPrint('onRewardModalClosed');
                   },
+                  hasAds: (bool hasAds) {
+                    debugPrint('hasAds: $hasAds');
+                  },
                   options: CaRetailBoosterAdOptions(
                     width: 173,
                     height: 210,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
+import 'dart:async';
 
 import '../models/run_mode.dart';
 import '../models/ad_options.dart';
@@ -15,8 +16,12 @@ class CaRetailBoosterAdView extends StatefulWidget {
   final CaRetailBoosterAdOptions? options;
   final VoidCallback? onMarkSucceeded;
   final VoidCallback? onRewardModalClosed;
+  final Function(bool)? hasAds;
 
-  const CaRetailBoosterAdView({
+  final StreamController<bool> _hasAdsController =
+      StreamController<bool>.broadcast();
+
+  CaRetailBoosterAdView({
     super.key,
     required this.mediaId,
     required this.userId,
@@ -26,7 +31,16 @@ class CaRetailBoosterAdView extends StatefulWidget {
     this.options,
     this.onMarkSucceeded,
     this.onRewardModalClosed,
+    this.hasAds,
   });
+
+  Future<bool> hasAdsFuture() {
+    return _hasAdsController.stream.first;
+  }
+
+  Stream<bool> hasAdsStream() {
+    return _hasAdsController.stream;
+  }
 
   @override
   State<CaRetailBoosterAdView> createState() => _CaRetailBoosterAdViewState();
@@ -55,6 +69,11 @@ class _CaRetailBoosterAdViewState extends State<CaRetailBoosterAdView> {
         break;
       case CaRetailBoosterMethodCallType.rewardModalClosed:
         widget.onRewardModalClosed?.call();
+        break;
+      case CaRetailBoosterMethodCallType.hasAds:
+        final hasAds = call.arguments as bool;
+        widget._hasAdsController.add(hasAds);
+        widget.hasAds?.call(hasAds);
         break;
       case null:
         break;
@@ -107,6 +126,8 @@ class _CaRetailBoosterAdViewState extends State<CaRetailBoosterAdView> {
 
   @override
   void dispose() {
+    // ストリームのクリーンアップ
+    widget._hasAdsController.close();
     // チャンネルのクリーンアップ
     _channel.setMethodCallHandler(null);
     super.dispose();

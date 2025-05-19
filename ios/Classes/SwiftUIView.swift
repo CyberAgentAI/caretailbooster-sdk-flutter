@@ -76,6 +76,9 @@ class SwiftUIView: NSObject, FlutterPlatformView {
                     }
                     hostingController.rootView = AnyView(adScrollView)
                 }
+                weakChannel?.invokeMethod(CaRetailBoosterMethodCallType.hasAds.rawValue, arguments: true)
+            } else {
+                weakChannel?.invokeMethod(CaRetailBoosterMethodCallType.hasAds.rawValue, arguments: false)
             }
         }
     }

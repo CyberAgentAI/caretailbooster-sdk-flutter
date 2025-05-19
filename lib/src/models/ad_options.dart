@@ -4,6 +4,7 @@ class CaRetailBoosterAdOptions {
   final double? itemSpacing;
   final double? leadingMargin;
   final double? trailingMargin;
+  final bool hiddenIndicators;
 
   const CaRetailBoosterAdOptions({
     this.width,
@@ -11,5 +12,6 @@ class CaRetailBoosterAdOptions {
     this.itemSpacing,
     this.leadingMargin,
     this.trailingMargin,
+    this.hiddenIndicators = true,
   });
 }

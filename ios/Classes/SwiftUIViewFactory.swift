@@ -21,7 +21,8 @@ class SwiftUIViewFactory: NSObject, FlutterPlatformViewFactory {
             let userId = args["userId"] as? String,
             let crypto = args["crypto"] as? String,
             let tagGroupId = args["tagGroupId"] as? String,
-            let runMode = args["runMode"] as? String
+            let runMode = args["runMode"] as? String,
+            let hiddenIndicators = args["hiddenIndicators"] as? Bool
         else {
             fatalError("Invalid arguments")
         }
@@ -39,7 +40,8 @@ class SwiftUIViewFactory: NSObject, FlutterPlatformViewFactory {
             height: args["height"] as? Int,
             itemSpacing: args["itemSpacing"] as? CGFloat,
             leadingMargin: args["leadingMargin"] as? CGFloat,
-            trailingMargin: args["trailingMargin"] as? CGFloat
+            trailingMargin: args["trailingMargin"] as? CGFloat,
+            hiddenIndicators: hiddenIndicators
         )
     }
 

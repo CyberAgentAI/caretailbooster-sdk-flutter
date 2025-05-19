@@ -37,7 +37,8 @@ class CaRetailBoosterView(
     private val height: Int?,
     private val itemSpacing: Double?,
     private val leadingMargin: Double?,
-    private val trailingMargin: Double?
+    private val trailingMargin: Double?,
+    private val hiddenIndicators: Boolean
 ) : PlatformView {
     private val channel: MethodChannel = MethodChannel(messenger, "ca_retail_booster_ad_view_$viewId")
     private var adView: View? = null

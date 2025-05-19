@@ -22,7 +22,8 @@ class SwiftUIView: NSObject, FlutterPlatformView {
         height: Int?,
         itemSpacing: CGFloat?,
         leadingMargin: CGFloat?,
-        trailingMargin: CGFloat?
+        trailingMargin: CGFloat?,
+        hiddenIndicators: Bool
     ) {
         channel = FlutterMethodChannel(name: "ca_retail_booster_ad_view_\(viewId)", binaryMessenger: messenger)
         weak var weakChannel = channel
@@ -59,7 +60,7 @@ class SwiftUIView: NSObject, FlutterPlatformView {
         self.retailBoosterAd.getAdViews { result in
             if case .success(let adViews) = result, !adViews.isEmpty {
                 DispatchQueue.main.async {
-                    let adScrollView = ScrollView(.horizontal, showsIndicators: false) {
+                    let adScrollView = ScrollView(.horizontal, showsIndicators: hiddenIndicators) {
                         HStack(spacing: itemSpacing ?? 0) {
                             if let leadingMargin, leadingMargin > 0 {
                                 Spacer()

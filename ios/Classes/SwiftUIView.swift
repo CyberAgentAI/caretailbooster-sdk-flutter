@@ -33,10 +33,10 @@ class SwiftUIView: NSObject, FlutterPlatformView {
             mode: .init(rawValue: runMode) ?? .stg,
             callback: Callback(
                 onMarkSucceeded: {
-                    weakChannel?.invokeMethod(CaRetailBoosterCallback.markSucceeded.rawValue, arguments: nil)
+                    weakChannel?.invokeMethod(CaRetailBoosterMethodCallType.markSucceeded.rawValue, arguments: nil)
                 },
                 onRewardModalClosed: {
-                    weakChannel?.invokeMethod(CaRetailBoosterCallback.rewardModalClosed.rawValue, arguments: nil)
+                    weakChannel?.invokeMethod(CaRetailBoosterMethodCallType.rewardModalClosed.rawValue, arguments: nil)
                 }
             ),
             options: .init(

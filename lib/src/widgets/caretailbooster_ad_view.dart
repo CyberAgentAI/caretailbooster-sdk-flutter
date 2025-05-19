@@ -4,7 +4,7 @@ import 'dart:io';
 
 import '../models/run_mode.dart';
 import '../models/ad_options.dart';
-import '../models/callback_type.dart';
+import '../models/method_call_type.dart';
 
 class CaRetailBoosterAdView extends StatefulWidget {
   final String mediaId;
@@ -46,14 +46,14 @@ class _CaRetailBoosterAdViewState extends State<CaRetailBoosterAdView> {
   }
 
   Future<dynamic> _handleMethodCall(MethodCall call) async {
-    final callbackType =
-        CaRetailBoosterCallbackType.fromMethodName(call.method);
+    final methodCallType =
+        CaRetailBoosterMethodCallType.fromMethodName(call.method);
 
-    switch (callbackType) {
-      case CaRetailBoosterCallbackType.markSucceeded:
+    switch (methodCallType) {
+      case CaRetailBoosterMethodCallType.markSucceeded:
         widget.onMarkSucceeded?.call();
         break;
-      case CaRetailBoosterCallbackType.rewardModalClosed:
+      case CaRetailBoosterMethodCallType.rewardModalClosed:
         widget.onRewardModalClosed?.call();
         break;
       case null:

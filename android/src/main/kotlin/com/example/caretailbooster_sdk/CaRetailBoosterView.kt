@@ -37,7 +37,8 @@ class CaRetailBoosterView(
     private val height: Int?,
     private val itemSpacing: Double?,
     private val leadingMargin: Double?,
-    private val trailingMargin: Double?
+    private val trailingMargin: Double?,
+    private val hiddenIndicators: Boolean
 ) : PlatformView {
     private val channel: MethodChannel = MethodChannel(messenger, "ca_retail_booster_ad_view_$viewId")
     private var adView: View? = null
@@ -58,7 +59,7 @@ class CaRetailBoosterView(
             override fun onMarkSucceeded() {
                 try {
                     Handler(Looper.getMainLooper()).post {
-                        channel.invokeMethod(CaRetailBoosterCallbackType.MARK_SUCCEEDED.methodName, null)
+                        channel.invokeMethod(CaRetailBoosterMethodCallType.MARK_SUCCEEDED.methodName, null)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -68,7 +69,7 @@ class CaRetailBoosterView(
             override fun onRewardModalClose() {
                 try {
                     Handler(Looper.getMainLooper()).post {
-                        channel.invokeMethod(CaRetailBoosterCallbackType.REWARD_MODAL_CLOSED.methodName, null)
+                        channel.invokeMethod(CaRetailBoosterMethodCallType.REWARD_MODAL_CLOSED.methodName, null)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -111,6 +112,12 @@ class CaRetailBoosterView(
             callback = callback,
             options = options
         )
+
+        // 広告の有無を通知
+        val hasAds = caRetailBoosterResult.ads.isNotEmpty()
+        Handler(Looper.getMainLooper()).post {
+            channel.invokeMethod(CaRetailBoosterMethodCallType.HAS_ADS.methodName, hasAds)
+        }
 
         // 広告の表示
         Column {

@@ -1,11 +1,12 @@
 package com.example.caretailbooster_sdk
 
-enum class CaRetailBoosterCallbackType(val methodName: String) {
+enum class CaRetailBoosterMethodCallType(val methodName: String) {
     MARK_SUCCEEDED("onMarkSucceeded"),
-    REWARD_MODAL_CLOSED("onRewardModalClosed");
+    REWARD_MODAL_CLOSED("onRewardModalClosed"),
+    HAS_ADS("hasAds");
     
     companion object {
-        fun fromMethodName(methodName: String): CaRetailBoosterCallbackType? {
+        fun fromMethodName(methodName: String): CaRetailBoosterMethodCallType? {
             return values().find { it.methodName == methodName }
         }
     }

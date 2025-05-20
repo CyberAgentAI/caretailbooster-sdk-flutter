@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
+import 'dart:async';
 
 import '../models/run_mode.dart';
 import '../models/ad_options.dart';
-import '../models/callback_type.dart';
+import '../models/method_call_type.dart';
 
 class CaRetailBoosterAdView extends StatefulWidget {
   final String mediaId;
@@ -15,8 +16,12 @@ class CaRetailBoosterAdView extends StatefulWidget {
   final CaRetailBoosterAdOptions? options;
   final VoidCallback? onMarkSucceeded;
   final VoidCallback? onRewardModalClosed;
+  final Function(bool)? hasAds;
 
-  const CaRetailBoosterAdView({
+  final StreamController<bool> _hasAdsController =
+      StreamController<bool>.broadcast();
+
+  CaRetailBoosterAdView({
     super.key,
     required this.mediaId,
     required this.userId,
@@ -26,7 +31,16 @@ class CaRetailBoosterAdView extends StatefulWidget {
     this.options,
     this.onMarkSucceeded,
     this.onRewardModalClosed,
+    this.hasAds,
   });
+
+  Future<bool> hasAdsFuture() {
+    return _hasAdsController.stream.first;
+  }
+
+  Stream<bool> hasAdsStream() {
+    return _hasAdsController.stream;
+  }
 
   @override
   State<CaRetailBoosterAdView> createState() => _CaRetailBoosterAdViewState();
@@ -46,15 +60,20 @@ class _CaRetailBoosterAdViewState extends State<CaRetailBoosterAdView> {
   }
 
   Future<dynamic> _handleMethodCall(MethodCall call) async {
-    final callbackType =
-        CaRetailBoosterCallbackType.fromMethodName(call.method);
+    final methodCallType =
+        CaRetailBoosterMethodCallType.fromMethodName(call.method);
 
-    switch (callbackType) {
-      case CaRetailBoosterCallbackType.markSucceeded:
+    switch (methodCallType) {
+      case CaRetailBoosterMethodCallType.markSucceeded:
         widget.onMarkSucceeded?.call();
         break;
-      case CaRetailBoosterCallbackType.rewardModalClosed:
+      case CaRetailBoosterMethodCallType.rewardModalClosed:
         widget.onRewardModalClosed?.call();
+        break;
+      case CaRetailBoosterMethodCallType.hasAds:
+        final hasAds = call.arguments as bool;
+        widget._hasAdsController.add(hasAds);
+        widget.hasAds?.call(hasAds);
         break;
       case null:
         break;
@@ -79,6 +98,7 @@ class _CaRetailBoosterAdViewState extends State<CaRetailBoosterAdView> {
           'itemSpacing': widget.options?.itemSpacing,
           'leadingMargin': widget.options?.leadingMargin,
           'trailingMargin': widget.options?.trailingMargin,
+          'hiddenIndicators': widget.options?.hiddenIndicators,
         },
         creationParamsCodec: const StandardMessageCodec(),
       );
@@ -97,6 +117,7 @@ class _CaRetailBoosterAdViewState extends State<CaRetailBoosterAdView> {
           'itemSpacing': widget.options?.itemSpacing,
           'leadingMargin': widget.options?.leadingMargin,
           'trailingMargin': widget.options?.trailingMargin,
+          'hiddenIndicators': widget.options?.hiddenIndicators,
         },
         creationParamsCodec: const StandardMessageCodec(),
       );
@@ -107,6 +128,8 @@ class _CaRetailBoosterAdViewState extends State<CaRetailBoosterAdView> {
 
   @override
   void dispose() {
+    // ストリームのクリーンアップ
+    widget._hasAdsController.close();
     // チャンネルのクリーンアップ
     _channel.setMethodCallHandler(null);
     super.dispose();

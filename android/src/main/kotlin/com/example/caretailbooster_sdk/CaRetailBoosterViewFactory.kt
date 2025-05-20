@@ -26,7 +26,8 @@ class CaRetailBoosterViewFactory(
             arguments["height"] as? Int,
             arguments["itemSpacing"] as? Double,
             arguments["leadingMargin"] as? Double,
-            arguments["trailingMargin"] as? Double
+            arguments["trailingMargin"] as? Double,
+            arguments["hiddenIndicators"] as? Boolean ?: true
         )
     }
 }

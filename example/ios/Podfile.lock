@@ -1,15 +1,15 @@
 PODS:
   - caretailbooster_sdk (0.5.0):
-    - CaRetailBoosterSDK (= 1.4.0)
+    - CaRetailBoosterSDK (= 1.4.1)
     - Flutter
-  - CaRetailBoosterSDK (1.4.0)
+  - CaRetailBoosterSDK (1.4.1)
   - Flutter (1.0.0)
   - integration_test (0.0.1):
     - Flutter
 
 DEPENDENCIES:
   - caretailbooster_sdk (from `.symlinks/plugins/caretailbooster_sdk/ios`)
-  - CaRetailBoosterSDK (from `https://github.com/CyberAgentAI/caretailbooster-sdk-ios.git`, tag `1.4.0`)
+  - CaRetailBoosterSDK (from `https://github.com/CyberAgentAI/caretailbooster-sdk-ios.git`, tag `1.4.1`)
   - Flutter (from `Flutter`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
 
@@ -18,7 +18,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/caretailbooster_sdk/ios"
   CaRetailBoosterSDK:
     :git: https://github.com/CyberAgentAI/caretailbooster-sdk-ios.git
-    :tag: 1.4.0
+    :tag: 1.4.1
   Flutter:
     :path: Flutter
   integration_test:
@@ -27,14 +27,14 @@ EXTERNAL SOURCES:
 CHECKOUT OPTIONS:
   CaRetailBoosterSDK:
     :git: https://github.com/CyberAgentAI/caretailbooster-sdk-ios.git
-    :tag: 1.4.0
+    :tag: 1.4.1
 
 SPEC CHECKSUMS:
-  caretailbooster_sdk: 9ea47e84914762a7e13098563df789aa767a8934
-  CaRetailBoosterSDK: b6a4308065d85beaccbfb89740d4e7b4ddea0713
+  caretailbooster_sdk: d7ec072fe6597e489ccf4d5a88c5496cc8379f48
+  CaRetailBoosterSDK: 731aa84161cf1f7c2bae673cc15ce5f5bd063e6a
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
 
-PODFILE CHECKSUM: d19e1fb4629405d5bd5414343b5b946101889554
+PODFILE CHECKSUM: 59b93fa1de6c8817266000978f46a0becc9e3aa4
 
 COCOAPODS: 1.16.2

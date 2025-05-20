@@ -51,7 +51,12 @@ class SwiftUIView: NSObject, FlutterPlatformView {
             crypto: crypto,
             tagGroupId: tagGroupId,
             mode: .init(rawValue: runMode) ?? .stg,
-            callback: callback
+            callback: callback,
+            options: .init(rewardAd: RewardAdOption(
+                    width: width,
+                    height: height
+                )
+            )
         )
 
         super.init()

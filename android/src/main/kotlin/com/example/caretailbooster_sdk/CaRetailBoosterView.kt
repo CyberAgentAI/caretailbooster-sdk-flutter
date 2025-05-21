@@ -23,6 +23,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.background
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 class CaRetailBoosterView(
     private val context: Context,
@@ -113,10 +118,20 @@ class CaRetailBoosterView(
             options = options
         )
 
+        var isFirst by remember { mutableStateOf(true) }
+        var prevAds by remember { mutableStateOf<List<Any>>(emptyList()) }
+    
         // 広告の有無を通知
-        val hasAds = caRetailBoosterResult.ads.isNotEmpty()
-        Handler(Looper.getMainLooper()).post {
-            channel.invokeMethod(CaRetailBoosterMethodCallType.HAS_ADS.methodName, hasAds)
+        LaunchedEffect(caRetailBoosterResult.ads.hashCode()) {
+            val ads = caRetailBoosterResult.ads
+            if (isFirst) {
+                isFirst = false
+            } else if (prevAds != ads) {
+                Handler(Looper.getMainLooper()).post {
+                    channel.invokeMethod(CaRetailBoosterMethodCallType.HAS_ADS.methodName, ads.isNotEmpty())
+                }
+            }
+            prevAds = ads
         }
 
         // 広告の表示

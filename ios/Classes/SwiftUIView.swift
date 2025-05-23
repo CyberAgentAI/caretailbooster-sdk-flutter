@@ -7,6 +7,11 @@ class SwiftUIView: NSObject, FlutterPlatformView {
     private var _view: UIView
     private let channel: FlutterMethodChannel
     private var retailBoosterAd: RetailBoosterAd
+    private let hostingController: UIHostingController<AnyView>
+    private let itemSpacing: CGFloat?
+    private let leadingMargin: CGFloat?
+    private let trailingMargin: CGFloat?
+    private let hiddenIndicators: Bool
 
     @MainActor
     init(
@@ -28,11 +33,16 @@ class SwiftUIView: NSObject, FlutterPlatformView {
         channel = FlutterMethodChannel(name: "ca_retail_booster_ad_view_\(viewId)", binaryMessenger: messenger)
         weak var weakChannel = channel
 
-        let hostingController = UIHostingController(rootView: AnyView(EmptyView()))
+        hostingController = UIHostingController(rootView: AnyView(EmptyView()))
         hostingController.view.frame = frame
         hostingController.view.backgroundColor = .clear
 
         _view = hostingController.view
+        
+        self.itemSpacing = itemSpacing
+        self.leadingMargin = leadingMargin
+        self.trailingMargin = trailingMargin
+        self.hiddenIndicators = hiddenIndicators
 
         // コールバックの初期化
         let callback = Callback(
@@ -61,26 +71,38 @@ class SwiftUIView: NSObject, FlutterPlatformView {
 
         super.init()
 
-        // 広告を読み込んで表示
-        self.retailBoosterAd.getAdViews { result in
+        SwiftUIViewNotification.setSwiftUIView(self)
+        SwiftUIViewNotification.registerNotifications()
+        
+        loadAds()
+    }
+    
+    // 広告データの読み込みメソッド
+    @MainActor
+    func loadAds() {
+        weak var weakChannel = channel
+        
+        self.retailBoosterAd.getAdViews { [weak self] result in
+            guard let self = self else { return }
+            
             if case .success(let adViews) = result, !adViews.isEmpty {
                 DispatchQueue.main.async {
-                    let adScrollView = ScrollView(.horizontal, showsIndicators: hiddenIndicators) {
-                        HStack(spacing: itemSpacing ?? 0) {
-                            if let leadingMargin, leadingMargin > 0 {
+                    let adScrollView = ScrollView(.horizontal, showsIndicators: self.hiddenIndicators) {
+                        HStack(spacing: self.itemSpacing ?? 0) {
+                            if let leadingMargin = self.leadingMargin, leadingMargin > 0 {
                                 Spacer()
                                     .frame(width: leadingMargin)
                             }
                             ForEach(0..<adViews.count, id: \.self) { index in
                                 adViews[index]
                             }
-                            if let trailingMargin, trailingMargin > 0 {
+                            if let trailingMargin = self.trailingMargin, trailingMargin > 0 {
                                 Spacer()
                                     .frame(width: trailingMargin)
                             }
                         }
                     }
-                    hostingController.rootView = AnyView(adScrollView)
+                    self.hostingController.rootView = AnyView(adScrollView)
                 }
                 weakChannel?.invokeMethod(CaRetailBoosterMethodCallType.hasAds.rawValue, arguments: true)
             } else {
@@ -91,5 +113,9 @@ class SwiftUIView: NSObject, FlutterPlatformView {
 
     func view() -> UIView {
         _view
+    }
+    
+    deinit {
+        SwiftUIViewNotification.unregisterNotifications()
     }
 }

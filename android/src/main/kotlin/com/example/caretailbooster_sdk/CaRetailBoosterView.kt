@@ -7,7 +7,7 @@ import android.os.Looper
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
@@ -28,6 +28,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 
 class CaRetailBoosterView(
     private val context: Context,
@@ -136,18 +138,18 @@ class CaRetailBoosterView(
 
         // 広告の表示
         Column {
-            LazyRow(
+            Row(
                 horizontalArrangement = Arrangement.spacedBy(itemSpacing?.toFloat()?.dp ?: 0.dp),
-                contentPadding = PaddingValues(
-                    start = leadingMargin?.toFloat()?.dp ?: 0.dp,
-                    end = trailingMargin?.toFloat()?.dp ?: 0.dp
-                ),
-                modifier = Modifier.background(Color.Transparent)
+                modifier = Modifier
+                    .background(Color.Transparent)
+                    .padding(
+                        start = leadingMargin?.toFloat()?.dp ?: 0.dp,
+                        end = trailingMargin?.toFloat()?.dp ?: 0.dp
+                    )
+                    .horizontalScroll(rememberScrollState())
             ) {
                 caRetailBoosterResult.ads.forEach { ad ->
-                    item {
-                        ad()
-                    }
+                    ad()
                 }
             }
         }

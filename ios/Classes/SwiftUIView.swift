@@ -12,8 +12,8 @@ class SwiftUIView: NSObject, FlutterPlatformView {
     private let leadingMargin: CGFloat?
     private let trailingMargin: CGFloat?
     private let hiddenIndicators: Bool
-    // 通知登録のためのID
-    private var notificationId: UUID?
+    private let tagGroupId: String
+    private var isLoadingData = false
 
     @MainActor
     init(
@@ -31,9 +31,7 @@ class SwiftUIView: NSObject, FlutterPlatformView {
         leadingMargin: CGFloat?,
         trailingMargin: CGFloat?,
         hiddenIndicators: Bool
-    ) {
-        print("iOS: SwiftUIView init with viewId: \(viewId)")
-        
+    ) { 
         channel = FlutterMethodChannel(name: "ca_retail_booster_ad_view_\(viewId)", binaryMessenger: messenger)
         weak var weakChannel = channel
 
@@ -43,6 +41,7 @@ class SwiftUIView: NSObject, FlutterPlatformView {
 
         _view = hostingController.view
         
+        self.tagGroupId = tagGroupId
         self.itemSpacing = itemSpacing
         self.leadingMargin = leadingMargin
         self.trailingMargin = trailingMargin
@@ -75,8 +74,7 @@ class SwiftUIView: NSObject, FlutterPlatformView {
 
         super.init()
         
-        // 通知システムに登録して、IDを保存
-        notificationId = SwiftUIViewNotification.registerView(self)
+        SwiftUIViewNotification.registerView(self, tagGroupId: tagGroupId)
         
         loadAds()
     }
@@ -84,39 +82,40 @@ class SwiftUIView: NSObject, FlutterPlatformView {
     // 広告データの読み込みメソッド
     @MainActor
     func loadAds() {
-        print("iOS: loadAds called for SwiftUIView with ID: \(notificationId?.uuidString ?? "unknown")")
+        if isLoadingData { return }
+        isLoadingData = true
         
-        weak var weakChannel = channel
-        
-        self.retailBoosterAd.getAdViews { [weak self] result in
+        retailBoosterAd.getAdViews { [weak self] result in
             guard let self = self else { return }
+            self.isLoadingData = false
             
             if case .success(let adViews) = result, !adViews.isEmpty {
-                print("iOS: Successfully loaded \(adViews.count) ads")
-                
-                DispatchQueue.main.async {
-                    let adScrollView = ScrollView(.horizontal, showsIndicators: self.hiddenIndicators) {
-                        HStack(spacing: self.itemSpacing ?? 0) {
-                            if let leadingMargin = self.leadingMargin, leadingMargin > 0 {
-                                Spacer()
-                                    .frame(width: leadingMargin)
-                            }
-                            ForEach(0..<adViews.count, id: \.self) { index in
-                                adViews[index]
-                            }
-                            if let trailingMargin = self.trailingMargin, trailingMargin > 0 {
-                                Spacer()
-                                    .frame(width: trailingMargin)
-                            }
-                        }
-                    }
-                    print("iOS: Updating UI with new ads")
-                    self.hostingController.rootView = AnyView(adScrollView)
-                }
-                weakChannel?.invokeMethod(CaRetailBoosterMethodCallType.hasAds.rawValue, arguments: true)
+                self.updateUI(with: adViews)
+                self.channel.invokeMethod(CaRetailBoosterMethodCallType.hasAds.rawValue, arguments: true)
             } else {
-                print("iOS: No ads available or error occurred")
-                weakChannel?.invokeMethod(CaRetailBoosterMethodCallType.hasAds.rawValue, arguments: false)
+                self.channel.invokeMethod(CaRetailBoosterMethodCallType.hasAds.rawValue, arguments: false)
+            }
+        }
+    }
+
+    private func updateUI(with adViews: [AnyView]) {
+        DispatchQueue.main.async {
+            self.hostingController.rootView = AnyView(self.createAdScrollView(with: adViews))
+        }
+    }
+
+    private func createAdScrollView(with adViews: [AnyView]) -> some View {
+        ScrollView(.horizontal, showsIndicators: hiddenIndicators) {
+            HStack(spacing: itemSpacing ?? 0) {
+                if let leadingMargin = leadingMargin, leadingMargin > 0 {
+                    Spacer().frame(width: leadingMargin)
+                }
+                ForEach(0..<adViews.count, id: \.self) { index in
+                    adViews[index]
+                }
+                if let trailingMargin = trailingMargin, trailingMargin > 0 {
+                    Spacer().frame(width: trailingMargin)
+                }
             }
         }
     }
@@ -126,11 +125,6 @@ class SwiftUIView: NSObject, FlutterPlatformView {
     }
     
     deinit {
-        print("iOS: SwiftUIView deinit with ID: \(notificationId?.uuidString ?? "unknown")")
-        
-        // IDを使って通知登録を解除
-        if let id = notificationId {
-            SwiftUIViewNotification.unregisterView(with: id)
-        }
+        SwiftUIViewNotification.unregisterView(self, tagGroupId: tagGroupId)
     }
 }

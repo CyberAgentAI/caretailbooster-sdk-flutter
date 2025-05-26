@@ -83,6 +83,7 @@ class _CaRetailBoosterAdViewState extends State<CaRetailBoosterAdView> {
 
   @override
   Widget build(BuildContext context) {
+    print('Flutter: Building CaRetailBoosterAdView');
     if (Platform.isIOS) {
       return UiKitView(
         viewType: 'ca_retail_booster_ad_view',

@@ -12,6 +12,7 @@ extension NSNotification {
 class SwiftUIViewNotification {
     private static var viewsByTagGroup = [String: WeakReference<SwiftUIView>]()
     private static var isDebouncing = false
+    private static var debounceInterval = 0.3
     
     private class WeakReference<T: AnyObject> {
         weak var target: T?
@@ -52,7 +53,7 @@ class SwiftUIViewNotification {
             
             viewsByTagGroup = viewsByTagGroup.filter { $0.value.target != nil }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + debounceInterval) {
                 isDebouncing = false
             }
         }

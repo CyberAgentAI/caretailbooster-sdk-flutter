@@ -99,9 +99,7 @@ class SwiftUIView: NSObject, FlutterPlatformView {
     }
 
     private func updateUI(with adViews: [AnyView]) {
-        DispatchQueue.main.async {
-            self.hostingController.rootView = AnyView(self.createAdScrollView(with: adViews))
-        }
+        self.hostingController.rootView = AnyView(self.createAdScrollView(with: adViews))
     }
 
     private func createAdScrollView(with adViews: [AnyView]) -> some View {

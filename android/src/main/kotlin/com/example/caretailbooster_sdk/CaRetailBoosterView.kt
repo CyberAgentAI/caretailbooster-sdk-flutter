@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
@@ -142,15 +143,18 @@ class CaRetailBoosterView(
                 horizontalArrangement = Arrangement.spacedBy(itemSpacing?.toFloat()?.dp ?: 0.dp),
                 modifier = Modifier
                     .background(Color.Transparent)
-                    .padding(
-                        start = leadingMargin?.toFloat()?.dp ?: 0.dp,
-                        end = trailingMargin?.toFloat()?.dp ?: 0.dp
-                    )
                     .horizontalScroll(rememberScrollState())
             ) {
+                // Rowだとpaddingで要素先頭のmarginと末尾のmarginが取れず、見切れて見えるので、Spacerを入れて調整
+                Spacer(
+                    modifier = Modifier.padding(start = leadingMargin?.toFloat()?.dp ?: 0.dp)
+                )
                 caRetailBoosterResult.ads.forEach { ad ->
                     ad()
                 }
+                Spacer(
+                    modifier = Modifier.padding(end = trailingMargin?.toFloat()?.dp ?: 0.dp)
+                )
             }
         }
     }

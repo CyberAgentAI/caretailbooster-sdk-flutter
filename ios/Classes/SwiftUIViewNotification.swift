@@ -10,43 +10,52 @@ extension NSNotification {
 }
 
 class SwiftUIViewNotification {
-    private static var swiftUIView: SwiftUIView?
-
-    public static func setSwiftUIView(_ view: SwiftUIView) {
-        swiftUIView = view
+    private static var viewsByTagGroup = [String: WeakReference<SwiftUIView>]()
+    private static var isDebouncing = false
+    private static var debounceInterval = 0.3
+    
+    private class WeakReference<T: AnyObject> {
+        weak var target: T?
+        init(_ target: T) { self.target = target }
     }
     
-    static func registerNotifications() {
-        let notificationTypes: [Notification.Name] = [
-            NSNotification.FetchAds
-        ]
+    static func registerView(_ view: SwiftUIView, tagGroupId: String) {
+        viewsByTagGroup[tagGroupId] = WeakReference(view)
         
-        for notificationType in notificationTypes {
+        if viewsByTagGroup.count == 1 {
             NotificationCenter.default.addObserver(
                 self,
-                selector: #selector(handleNotification(_:)),
-                name: notificationType,
+                selector: #selector(handleNotification),
+                name: NSNotification.FetchAds,
                 object: nil
             )
         }
     }
     
-    static func unregisterNotifications() {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    @objc static func handleNotification(_ notification: Notification) {
-        switch notification.name {
-        case NSNotification.FetchAds:
-            handleFetchAdsNotification(notification)
-        default:
-            print("Unknown notification: \(notification.name)")
+    static func unregisterView(_ view: SwiftUIView, tagGroupId: String) {
+        if let ref = viewsByTagGroup[tagGroupId], ref.target === view {
+            viewsByTagGroup.removeValue(forKey: tagGroupId)
+        }
+        
+        if viewsByTagGroup.isEmpty {
+            NotificationCenter.default.removeObserver(self)
         }
     }
     
-    private static func handleFetchAdsNotification(_ notification: Notification) {
+    @objc static func handleNotification(_ notification: Notification) {
+        if isDebouncing { return }
+        isDebouncing = true
+        
         DispatchQueue.main.async {
-            self.swiftUIView?.loadAds()
+            for (group, ref) in viewsByTagGroup where ref.target != nil {
+                ref.target?.loadAds()
+            }
+            
+            viewsByTagGroup = viewsByTagGroup.filter { $0.value.target != nil }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + debounceInterval) {
+                isDebouncing = false
+            }
         }
     }
 } 

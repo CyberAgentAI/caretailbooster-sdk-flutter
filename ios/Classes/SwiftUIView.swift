@@ -103,7 +103,7 @@ class SwiftUIView: NSObject, FlutterPlatformView {
     }
 
     private func createAdScrollView(with adViews: [AnyView]) -> some View {
-        ScrollView(.horizontal, showsIndicators: hiddenIndicators) {
+        ScrollView(.horizontal, showsIndicators: !hiddenIndicators) {
             HStack(spacing: itemSpacing ?? 0) {
                 if let leadingMargin = leadingMargin, leadingMargin > 0 {
                     Spacer().frame(width: leadingMargin)

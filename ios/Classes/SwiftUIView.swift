@@ -3,7 +3,18 @@ import UIKit
 import SwiftUI
 import CaRetailBoosterSDK
 
-class SwiftUIView: NSObject, FlutterPlatformView {
+extension View {
+    @ViewBuilder
+    func compatibleIgnoreSafeArea() -> some View {
+        if #available(iOS 14.0, *) {
+            self.ignoresSafeArea(.all)
+        } else {
+            self.edgesIgnoringSafeArea(.all)
+        }
+    }
+}
+
+class SwiftUIView: UIView, FlutterPlatformView {
     private var _view: UIView
     private let channel: FlutterMethodChannel
     private var retailBoosterAd: RetailBoosterAd
@@ -14,6 +25,10 @@ class SwiftUIView: NSObject, FlutterPlatformView {
     private let hiddenIndicators: Bool
     private let tagGroupId: String
     private var isLoadingData = false
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("not implemented")
+    }
 
     @MainActor
     init(
@@ -31,13 +46,13 @@ class SwiftUIView: NSObject, FlutterPlatformView {
         leadingMargin: CGFloat?,
         trailingMargin: CGFloat?,
         hiddenIndicators: Bool
-    ) { 
+    ) {
         channel = FlutterMethodChannel(name: "ca_retail_booster_ad_view_\(viewId)", binaryMessenger: messenger)
         weak var weakChannel = channel
 
         hostingController = UIHostingController(rootView: AnyView(EmptyView()))
-        hostingController.view.frame = frame
-        hostingController.view.backgroundColor = .clear
+//        hostingController.view.frame = frame
+        hostingController.view.backgroundColor = .red
 
         _view = hostingController.view
         
@@ -72,7 +87,15 @@ class SwiftUIView: NSObject, FlutterPlatformView {
             )
         )
 
-        super.init()
+        super.init(frame: frame)
+        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(hostingController.view)
+        NSLayoutConstraint.activate([
+            hostingController.view.topAnchor.constraint(equalTo: self.topAnchor),
+            hostingController.view.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            hostingController.view.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            hostingController.view.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+        ])
         
         SwiftUIViewNotification.registerView(self, tagGroupId: tagGroupId)
         
@@ -116,6 +139,24 @@ class SwiftUIView: NSObject, FlutterPlatformView {
                 }
             }
         }
+        .background(Color.blue)
+        .compatibleIgnoreSafeArea()
+        .onAppear {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self, let scrollView = self.findScrollView(in: self.hostingController.view) else { return }
+                print("[DEBUG] ")
+                print("[DEBUG] UIScrollView frame: \(scrollView.frame), origin: \(scrollView.frame.origin), bounds: \(scrollView.bounds)")
+                print("[DEBUG] UIScrollView contentOffset: \(scrollView.contentOffset)")
+            }
+        }
+    }
+
+    private func findScrollView(in view: UIView) -> UIScrollView? {
+        if let scrollView = view as? UIScrollView { return scrollView }
+        for subview in view.subviews {
+            if let found = findScrollView(in: subview) { return found }
+        }
+        return nil
     }
 
     func view() -> UIView {

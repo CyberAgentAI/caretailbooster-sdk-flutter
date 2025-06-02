@@ -3,6 +3,17 @@ import UIKit
 import SwiftUI
 import CaRetailBoosterSDK
 
+extension View {
+    @ViewBuilder
+    func compatibleIgnoreSafeArea() -> some View {
+        if #available(iOS 14.0, *) {
+            self.ignoresSafeArea(.all)
+        } else {
+            self.edgesIgnoringSafeArea(.all)
+        }
+    }
+}
+
 class SwiftUIView: NSObject, FlutterPlatformView {
     private var _view: UIView
     private let channel: FlutterMethodChannel
@@ -14,7 +25,7 @@ class SwiftUIView: NSObject, FlutterPlatformView {
     private let hiddenIndicators: Bool
     private let tagGroupId: String
     private var isLoadingData = false
-
+    
     @MainActor
     init(
         frame: CGRect,
@@ -31,15 +42,20 @@ class SwiftUIView: NSObject, FlutterPlatformView {
         leadingMargin: CGFloat?,
         trailingMargin: CGFloat?,
         hiddenIndicators: Bool
-    ) { 
+    ) {
         channel = FlutterMethodChannel(name: "ca_retail_booster_ad_view_\(viewId)", binaryMessenger: messenger)
         weak var weakChannel = channel
+        _view = UIView(frame: frame)
 
         hostingController = UIHostingController(rootView: AnyView(EmptyView()))
-        hostingController.view.frame = frame
         hostingController.view.backgroundColor = .clear
-
-        _view = hostingController.view
+        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        _view.addSubview(hostingController.view)
+        // 親View(_view)に上端、左端、右端を合わせる制約を追加
+        // TOOD: この設定だと下端が想定よりも大きくなってしまい、FluuterのWidgetと合わない。他コンテンツへの影響はないので、一旦TODOにしている。
+        hostingController.view.topAnchor.constraint(equalTo: _view.topAnchor).isActive = true
+        hostingController.view.leadingAnchor.constraint(equalTo: _view.leadingAnchor).isActive = true
+        hostingController.view.trailingAnchor.constraint(equalTo: _view.trailingAnchor).isActive = true
         
         self.tagGroupId = tagGroupId
         self.itemSpacing = itemSpacing
@@ -116,6 +132,7 @@ class SwiftUIView: NSObject, FlutterPlatformView {
                 }
             }
         }
+        .compatibleIgnoreSafeArea()
     }
 
     func view() -> UIView {

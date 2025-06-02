@@ -14,7 +14,7 @@ extension View {
     }
 }
 
-class SwiftUIView: UIView, FlutterPlatformView {
+class SwiftUIView: NSObject, FlutterPlatformView {
     private var _view: UIView
     private let channel: FlutterMethodChannel
     private var retailBoosterAd: RetailBoosterAd
@@ -25,11 +25,7 @@ class SwiftUIView: UIView, FlutterPlatformView {
     private let hiddenIndicators: Bool
     private let tagGroupId: String
     private var isLoadingData = false
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("not implemented")
-    }
-
+    
     @MainActor
     init(
         frame: CGRect,
@@ -49,12 +45,17 @@ class SwiftUIView: UIView, FlutterPlatformView {
     ) {
         channel = FlutterMethodChannel(name: "ca_retail_booster_ad_view_\(viewId)", binaryMessenger: messenger)
         weak var weakChannel = channel
+        _view = UIView(frame: frame)
 
         hostingController = UIHostingController(rootView: AnyView(EmptyView()))
-//        hostingController.view.frame = frame
-        hostingController.view.backgroundColor = .red
-
-        _view = hostingController.view
+        hostingController.view.backgroundColor = .clear
+        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        _view.addSubview(hostingController.view)
+        // 親View(_view)に上端、左端、右端を合わせる制約を追加
+        // TOOD: この設定だと下端が想定よりも大きくなってしまい、FluuterのWidgetと合わない。他コンテンツへの影響はないので、一旦TODOにしている。
+        hostingController.view.topAnchor.constraint(equalTo: _view.topAnchor).isActive = true
+        hostingController.view.leadingAnchor.constraint(equalTo: _view.leadingAnchor).isActive = true
+        hostingController.view.trailingAnchor.constraint(equalTo: _view.trailingAnchor).isActive = true
         
         self.tagGroupId = tagGroupId
         self.itemSpacing = itemSpacing
@@ -87,15 +88,7 @@ class SwiftUIView: UIView, FlutterPlatformView {
             )
         )
 
-        super.init(frame: frame)
-        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(hostingController.view)
-        NSLayoutConstraint.activate([
-            hostingController.view.topAnchor.constraint(equalTo: self.topAnchor),
-            hostingController.view.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            hostingController.view.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            hostingController.view.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-        ])
+        super.init()
         
         SwiftUIViewNotification.registerView(self, tagGroupId: tagGroupId)
         
@@ -139,24 +132,7 @@ class SwiftUIView: UIView, FlutterPlatformView {
                 }
             }
         }
-        .background(Color.blue)
         .compatibleIgnoreSafeArea()
-        .onAppear {
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self, let scrollView = self.findScrollView(in: self.hostingController.view) else { return }
-                print("[DEBUG] ")
-                print("[DEBUG] UIScrollView frame: \(scrollView.frame), origin: \(scrollView.frame.origin), bounds: \(scrollView.bounds)")
-                print("[DEBUG] UIScrollView contentOffset: \(scrollView.contentOffset)")
-            }
-        }
-    }
-
-    private func findScrollView(in view: UIView) -> UIScrollView? {
-        if let scrollView = view as? UIScrollView { return scrollView }
-        for subview in view.subviews {
-            if let found = findScrollView(in: subview) { return found }
-        }
-        return nil
     }
 
     func view() -> UIView {

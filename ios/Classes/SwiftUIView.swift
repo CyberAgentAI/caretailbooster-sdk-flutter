@@ -107,6 +107,8 @@ class SwiftUIView: NSObject, FlutterPlatformView {
             
             if case .success(let adViews) = result, !adViews.isEmpty {
                 self.updateUI(with: adViews)
+                self.channel.invokeMethod(CaRetailBoosterMethodCallType.areaName.rawValue, arguments: retailBoosterAd.areaName)
+                self.channel.invokeMethod(CaRetailBoosterMethodCallType.areaDescription.rawValue, arguments: retailBoosterAd.areaDescription)
                 self.channel.invokeMethod(CaRetailBoosterMethodCallType.hasAds.rawValue, arguments: true)
             } else {
                 self.channel.invokeMethod(CaRetailBoosterMethodCallType.hasAds.rawValue, arguments: false)

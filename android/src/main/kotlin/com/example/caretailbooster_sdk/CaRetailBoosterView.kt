@@ -137,6 +137,19 @@ class CaRetailBoosterView(
             prevAds = ads
         }
 
+        LaunchedEffect(caRetailBoosterResult.areaName.hashCode(), caRetailBoosterResult.areaDescription.hashCode()) {
+            if (!caRetailBoosterResult.areaName.isNullOrEmpty()) {
+                Handler(Looper.getMainLooper()).post {
+                    channel.invokeMethod(CaRetailBoosterMethodCallType.AREA_NAME.methodName, caRetailBoosterResult.areaName)
+                }
+            }
+            if (!caRetailBoosterResult.areaDescription.isNullOrEmpty()) {
+                Handler(Looper.getMainLooper()).post {
+                    channel.invokeMethod(CaRetailBoosterMethodCallType.AREA_DESCRIPTION.methodName, caRetailBoosterResult.areaDescription)
+                }
+            }
+        }
+
         // 広告の表示
         Column {
             Row(

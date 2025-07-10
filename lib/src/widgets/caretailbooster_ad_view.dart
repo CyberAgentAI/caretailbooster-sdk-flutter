@@ -158,6 +158,8 @@ class _CaRetailBoosterAdViewState extends State<CaRetailBoosterAdView> {
   void dispose() {
     // ストリームのクリーンアップ
     widget._hasAdsController.close();
+    widget._areaNameController.close();
+    widget._areaDescriptionController.close();
     // チャンネルのクリーンアップ
     _channel.setMethodCallHandler(null);
     super.dispose();

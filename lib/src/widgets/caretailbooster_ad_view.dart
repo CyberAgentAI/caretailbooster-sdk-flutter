@@ -115,43 +115,35 @@ class _CaRetailBoosterAdViewState extends State<CaRetailBoosterAdView> {
       return UiKitView(
         viewType: 'ca_retail_booster_ad_view',
         onPlatformViewCreated: _onPlatformViewCreated,
-        creationParams: <String, dynamic>{
-          'mediaId': widget.mediaId,
-          'userId': widget.userId,
-          'crypto': widget.crypto,
-          'tagGroupId': widget.tagGroupId,
-          'runMode': widget.runMode.name,
-          'width': widget.options?.width,
-          'height': widget.options?.height,
-          'itemSpacing': widget.options?.itemSpacing,
-          'leadingMargin': widget.options?.leadingMargin,
-          'trailingMargin': widget.options?.trailingMargin,
-          'hiddenIndicators': widget.options?.hiddenIndicators,
-        },
+        creationParams: _createCreationParams(),
         creationParamsCodec: const StandardMessageCodec(),
       );
     } else if (Platform.isAndroid) {
       return AndroidView(
         viewType: 'ca_retail_booster_ad_view',
         onPlatformViewCreated: _onPlatformViewCreated,
-        creationParams: <String, dynamic>{
-          'mediaId': widget.mediaId,
-          'userId': widget.userId,
-          'crypto': widget.crypto,
-          'tagGroupId': widget.tagGroupId,
-          'runMode': widget.runMode.name,
-          'width': widget.options?.width,
-          'height': widget.options?.height,
-          'itemSpacing': widget.options?.itemSpacing,
-          'leadingMargin': widget.options?.leadingMargin,
-          'trailingMargin': widget.options?.trailingMargin,
-          'hiddenIndicators': widget.options?.hiddenIndicators,
-        },
+        creationParams: _createCreationParams(),
         creationParamsCodec: const StandardMessageCodec(),
       );
     } else {
       return const Text('未対応のプラットフォームです');
     }
+  }
+
+  Map<String, dynamic> _createCreationParams() {
+    return <String, dynamic>{
+      'mediaId': widget.mediaId,
+      'userId': widget.userId,
+      'crypto': widget.crypto,
+      'tagGroupId': widget.tagGroupId,
+      'runMode': widget.runMode.name,
+      'width': widget.options?.width,
+      'height': widget.options?.height,
+      'itemSpacing': widget.options?.itemSpacing,
+      'leadingMargin': widget.options?.leadingMargin,
+      'trailingMargin': widget.options?.trailingMargin,
+      'hiddenIndicators': widget.options?.hiddenIndicators,
+    };
   }
 
   @override

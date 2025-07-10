@@ -5,4 +5,6 @@ enum CaRetailBoosterMethodCallType: String {
     case rewardModalClosed = "onRewardModalClosed"
     case adAvailabilityChanged = "onAdAvailabilityChanged"
     case hasAds = "hasAds"
+    case areaName = "areaName"
+    case areaDescription = "areaDescription"
 }

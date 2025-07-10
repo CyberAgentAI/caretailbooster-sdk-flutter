@@ -1,7 +1,9 @@
 enum CaRetailBoosterMethodCallType {
   markSucceeded('onMarkSucceeded'),
   rewardModalClosed('onRewardModalClosed'),
-  hasAds('hasAds');
+  hasAds('hasAds'),
+  areaName('areaName'),
+  areaDescription('areaDescription');
 
   final String methodName;
   const CaRetailBoosterMethodCallType(this.methodName);

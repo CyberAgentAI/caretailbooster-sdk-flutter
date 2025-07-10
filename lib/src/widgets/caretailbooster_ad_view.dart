@@ -20,6 +20,10 @@ class CaRetailBoosterAdView extends StatefulWidget {
 
   final StreamController<bool> _hasAdsController =
       StreamController<bool>.broadcast();
+  final StreamController<String> _areaNameController =
+      StreamController<String>.broadcast();
+  final StreamController<String> _areaDescriptionController =
+      StreamController<String>.broadcast();
 
   CaRetailBoosterAdView({
     super.key,
@@ -40,6 +44,22 @@ class CaRetailBoosterAdView extends StatefulWidget {
 
   Stream<bool> hasAdsStream() {
     return _hasAdsController.stream;
+  }
+
+  Future<String> areaNameFuture() {
+    return _areaNameController.stream.first;
+  }
+
+  Stream<String> areaNameStream() {
+    return _areaNameController.stream;
+  }
+
+  Future<String> areaDescriptionFuture() {
+    return _areaDescriptionController.stream.first;
+  }
+
+  Stream<String> areaDescriptionStream() {
+    return _areaDescriptionController.stream;
   }
 
   @override
@@ -75,6 +95,14 @@ class _CaRetailBoosterAdViewState extends State<CaRetailBoosterAdView> {
         widget._hasAdsController.add(hasAds);
         widget.hasAds?.call(hasAds);
         break;
+      case CaRetailBoosterMethodCallType.areaName:
+        final areaName = call.arguments as String;
+        widget._areaNameController.add(areaName);
+        break;
+      case CaRetailBoosterMethodCallType.areaDescription:
+        final areaDescription = call.arguments as String;
+        widget._areaDescriptionController.add(areaDescription);
+        break;
       case null:
         break;
     }
@@ -87,38 +115,14 @@ class _CaRetailBoosterAdViewState extends State<CaRetailBoosterAdView> {
       return UiKitView(
         viewType: 'ca_retail_booster_ad_view',
         onPlatformViewCreated: _onPlatformViewCreated,
-        creationParams: <String, dynamic>{
-          'mediaId': widget.mediaId,
-          'userId': widget.userId,
-          'crypto': widget.crypto,
-          'tagGroupId': widget.tagGroupId,
-          'runMode': widget.runMode.name,
-          'width': widget.options?.width,
-          'height': widget.options?.height,
-          'itemSpacing': widget.options?.itemSpacing,
-          'leadingMargin': widget.options?.leadingMargin,
-          'trailingMargin': widget.options?.trailingMargin,
-          'hiddenIndicators': widget.options?.hiddenIndicators,
-        },
+        creationParams: _createCreationParams(),
         creationParamsCodec: const StandardMessageCodec(),
       );
     } else if (Platform.isAndroid) {
       return AndroidView(
         viewType: 'ca_retail_booster_ad_view',
         onPlatformViewCreated: _onPlatformViewCreated,
-        creationParams: <String, dynamic>{
-          'mediaId': widget.mediaId,
-          'userId': widget.userId,
-          'crypto': widget.crypto,
-          'tagGroupId': widget.tagGroupId,
-          'runMode': widget.runMode.name,
-          'width': widget.options?.width,
-          'height': widget.options?.height,
-          'itemSpacing': widget.options?.itemSpacing,
-          'leadingMargin': widget.options?.leadingMargin,
-          'trailingMargin': widget.options?.trailingMargin,
-          'hiddenIndicators': widget.options?.hiddenIndicators,
-        },
+        creationParams: _createCreationParams(),
         creationParamsCodec: const StandardMessageCodec(),
       );
     } else {
@@ -126,10 +130,28 @@ class _CaRetailBoosterAdViewState extends State<CaRetailBoosterAdView> {
     }
   }
 
+  Map<String, dynamic> _createCreationParams() {
+    return <String, dynamic>{
+      'mediaId': widget.mediaId,
+      'userId': widget.userId,
+      'crypto': widget.crypto,
+      'tagGroupId': widget.tagGroupId,
+      'runMode': widget.runMode.name,
+      'width': widget.options?.width,
+      'height': widget.options?.height,
+      'itemSpacing': widget.options?.itemSpacing,
+      'leadingMargin': widget.options?.leadingMargin,
+      'trailingMargin': widget.options?.trailingMargin,
+      'hiddenIndicators': widget.options?.hiddenIndicators,
+    };
+  }
+
   @override
   void dispose() {
     // ストリームのクリーンアップ
     widget._hasAdsController.close();
+    widget._areaNameController.close();
+    widget._areaDescriptionController.close();
     // チャンネルのクリーンアップ
     _channel.setMethodCallHandler(null);
     super.dispose();

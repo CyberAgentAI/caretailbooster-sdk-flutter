@@ -137,13 +137,12 @@ class CaRetailBoosterView(
             prevAds = ads
         }
 
-        LaunchedEffect(caRetailBoosterResult.areaName.hashCode(), caRetailBoosterResult.areaDescription.hashCode()) {
-            if (!caRetailBoosterResult.areaName.isNullOrEmpty()) {
+        LaunchedEffect(caRetailBoosterResult.areaName, caRetailBoosterResult.areaDescription) {
+            // 初回のnull値はスキップ（両方nullの場合のみ）
+            if (caRetailBoosterResult.areaName != null || caRetailBoosterResult.areaDescription != null) {
                 Handler(Looper.getMainLooper()).post {
                     channel.invokeMethod(CaRetailBoosterMethodCallType.AREA_NAME.methodName, caRetailBoosterResult.areaName)
                 }
-            }
-            if (!caRetailBoosterResult.areaDescription.isNullOrEmpty()) {
                 Handler(Looper.getMainLooper()).post {
                     channel.invokeMethod(CaRetailBoosterMethodCallType.AREA_DESCRIPTION.methodName, caRetailBoosterResult.areaDescription)
                 }

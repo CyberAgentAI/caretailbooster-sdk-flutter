@@ -82,13 +82,13 @@ class _MyAppState extends State<MyApp> {
       }),
 
       adView1.areaNameFuture().then((areaName) {
-        debugPrint('adView1 areaName: $areaName');
+        debugPrint('adView1 areaName: ${areaName ?? "null"}');
       }).catchError((error) {
         debugPrint('adView1 areaName error: $error');
       }),
 
       adView1.areaDescriptionFuture().then((areaDescription) {
-        debugPrint('adView1 areaDescription: $areaDescription');
+        debugPrint('adView1 areaDescription: ${areaDescription ?? "null"}');
       }).catchError((error) {
         debugPrint('adView1 areaDescription error: $error');
       }),
@@ -98,6 +98,18 @@ class _MyAppState extends State<MyApp> {
         debugPrint('adView2 hasAds: $hasAds');
       }).catchError((error) {
         debugPrint('adView2 hasAds error: $error');
+      }),
+
+      adView2.areaNameFuture().then((areaName) {
+        debugPrint('adView2 areaName: ${areaName ?? "null"}');
+      }).catchError((error) {
+        debugPrint('adView2 areaName error: $error');
+      }),
+
+      adView2.areaDescriptionFuture().then((areaDescription) {
+        debugPrint('adView2 areaDescription: ${areaDescription ?? "null"}');
+      }).catchError((error) {
+        debugPrint('adView2 areaDescription error: $error');
       }),
     ]);
   }

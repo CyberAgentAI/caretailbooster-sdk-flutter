@@ -20,10 +20,10 @@ class CaRetailBoosterAdView extends StatefulWidget {
 
   final StreamController<bool> _hasAdsController =
       StreamController<bool>.broadcast();
-  final StreamController<String> _areaNameController =
-      StreamController<String>.broadcast();
-  final StreamController<String> _areaDescriptionController =
-      StreamController<String>.broadcast();
+  final StreamController<String?> _areaNameController =
+      StreamController<String?>.broadcast();
+  final StreamController<String?> _areaDescriptionController =
+      StreamController<String?>.broadcast();
 
   CaRetailBoosterAdView({
     super.key,
@@ -46,19 +46,19 @@ class CaRetailBoosterAdView extends StatefulWidget {
     return _hasAdsController.stream;
   }
 
-  Future<String> areaNameFuture() {
+  Future<String?> areaNameFuture() {
     return _areaNameController.stream.first;
   }
 
-  Stream<String> areaNameStream() {
+  Stream<String?> areaNameStream() {
     return _areaNameController.stream;
   }
 
-  Future<String> areaDescriptionFuture() {
+  Future<String?> areaDescriptionFuture() {
     return _areaDescriptionController.stream.first;
   }
 
-  Stream<String> areaDescriptionStream() {
+  Stream<String?> areaDescriptionStream() {
     return _areaDescriptionController.stream;
   }
 
@@ -96,11 +96,11 @@ class _CaRetailBoosterAdViewState extends State<CaRetailBoosterAdView> {
         widget.hasAds?.call(hasAds);
         break;
       case CaRetailBoosterMethodCallType.areaName:
-        final areaName = call.arguments as String;
+        final areaName = call.arguments as String?;
         widget._areaNameController.add(areaName);
         break;
       case CaRetailBoosterMethodCallType.areaDescription:
-        final areaDescription = call.arguments as String;
+        final areaDescription = call.arguments as String?;
         widget._areaDescriptionController.add(areaDescription);
         break;
       case null:

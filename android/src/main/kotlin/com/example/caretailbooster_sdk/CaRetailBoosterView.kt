@@ -19,7 +19,7 @@ import com.retaiboo.caretailboostersdk.useCaRetailBooster
 import com.retaiboo.caretailboostersdk.CaRetailBoosterCallback
 import com.retaiboo.caretailboostersdk.CaRetailBoosterEnvMode
 import com.retaiboo.caretailboostersdk.CaRetailBoosterOptions
-import com.retaiboo.caretailboostersdk.CaRetailBoosterRewardAdOptions
+import com.retaiboo.caretailboostersdk.CaRetailBoosterSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -86,16 +86,16 @@ class CaRetailBoosterView(
         }
 
         // オプションの設定
-        val rewardAdOptions = if (width != null || height != null) {
-            object : CaRetailBoosterRewardAdOptions {
+        val size = if (width != null || height != null) {
+            object : CaRetailBoosterSize {
                 override val width = this@CaRetailBoosterView.width
                 override val height = this@CaRetailBoosterView.height
             }
         } else null
 
-        val options = if (rewardAdOptions != null) {
+        val options = if (size != null) {
             object : CaRetailBoosterOptions {
-                override val rewardAd = rewardAdOptions
+                override val size = size
             }
         } else null
 

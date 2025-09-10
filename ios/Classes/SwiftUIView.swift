@@ -81,7 +81,7 @@ class SwiftUIView: NSObject, FlutterPlatformView {
             tagGroupId: tagGroupId,
             mode: .init(rawValue: runMode) ?? .stg,
             callback: callback,
-            options: .init(rewardAd: RewardAdOption(
+            options: .init(size: SizeOption(
                     width: width,
                     height: height
                 )

@@ -2,7 +2,7 @@ group = "com.example.caretailbooster_sdk"
 version = "1.0-SNAPSHOT"
 
 buildscript {
-    ext.kotlin_version = "1.9.10"
+    ext.kotlin_version = "2.0.0"
     repositories {
         google()
         mavenCentral()
@@ -11,6 +11,7 @@ buildscript {
     dependencies {
         classpath("com.android.tools.build:gradle:7.4.2")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+        classpath("org.jetbrains.kotlin:compose-compiler-gradle-plugin:$kotlin_version")
     }
 }
 
@@ -24,6 +25,7 @@ repositories {
 
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
+apply plugin: "org.jetbrains.kotlin.plugin.compose"
 
 android {
     namespace = "com.example.caretailbooster_sdk"
@@ -41,10 +43,6 @@ android {
 
     buildFeatures {
         compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
     }
 
     sourceSets {
@@ -98,8 +96,4 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
             "-Xskip-metadata-version-check"
         ]
     }
-}
-
-tasks.withType(JavaCompile) {
-    options.release = 17
 }

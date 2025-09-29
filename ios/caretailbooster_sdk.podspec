@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'caretailbooster_sdk'
-  s.version          = '1.2.3'
+  s.version          = '2.0.0'
   s.summary          = 'Flutter plugin for CaRetailBooster SDK'
   s.homepage         = 'https://github.com/CyberAgentAI/caretailbooster-sdk-flutter'
   s.license          = { :file => '../LICENSE' }

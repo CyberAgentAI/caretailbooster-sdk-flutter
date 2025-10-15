@@ -23,12 +23,13 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _initializeAdViews() {
-    const String mediaId = 'media_id';
-    const String userId = 'user_id';
-    const String crypto = 'crypto_id';
-    const String tagGroupId1 = 'reward1';
+    const String mediaId = 'QpkF0s3E6jQpOx6z';
+    const String userId = '1134990';
+    const String crypto =
+        '9015755ac7b8aa79fcc92239bbd53cb621da5bcedec8aa9c2b8b9944c992f421';
+    const String tagGroupId1 = 'fea82510-51d2-40c6-a4c1-c49cdb5f9b20';
     const String tagGroupId2 = 'banner1';
-    const CaRetailBoosterRunMode runMode = CaRetailBoosterRunMode.mock;
+    const CaRetailBoosterRunMode runMode = CaRetailBoosterRunMode.dev;
 
     adView1 = CaRetailBoosterAdView(
       mediaId: mediaId,
@@ -118,21 +119,64 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(),
-        body: Center(
+        appBar: AppBar(
+          title: const Text('CaRetailBooster Sample'),
+        ),
+        body: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Container(
+                height: 600,
+                color: Colors.blue[100],
+                child: const Center(
+                  child: Text('Header Section'),
+                ),
+              ),
+              const SizedBox(height: 48),
               SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: 210,
                 child: adView1,
               ),
+              const SizedBox(height: 48),
+              Container(
+                height: 450,
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: Colors.green[100],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Center(
+                  child: Text('Content Section 1'),
+                ),
+              ),
+              const SizedBox(height: 48),
               SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: 210,
                 child: adView2,
               ),
+              const SizedBox(height: 48),
+              Container(
+                height: 900,
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: Colors.orange[100],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Center(
+                  child: Text('Content Section 2'),
+                ),
+              ),
+              const SizedBox(height: 48),
+              Container(
+                height: 600,
+                color: Colors.purple[100],
+                child: const Center(
+                  child: Text('Footer Section'),
+                ),
+              ),
+              const SizedBox(height: 96),
             ],
           ),
         ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'dart:io';
 import 'dart:async';
 
@@ -117,6 +119,11 @@ class _CaRetailBoosterAdViewState extends State<CaRetailBoosterAdView> {
         onPlatformViewCreated: _onPlatformViewCreated,
         creationParams: _createCreationParams(),
         creationParamsCodec: const StandardMessageCodec(),
+        gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+          Factory<TapGestureRecognizer>(
+            () => TapGestureRecognizer(),
+          ),
+        },
       );
     } else if (Platform.isAndroid) {
       return AndroidView(
